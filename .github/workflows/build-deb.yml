@@ -1,0 +1,94 @@
+name: Build deb
+
+on:
+  workflow_dispatch:
+    inputs:
+      prerelease:
+        description: 'Pre-release?'
+        required: true
+        type: boolean
+      enable_isponsorblock:
+        description: 'Include iSponsorBlock'
+        required: true
+        type: boolean
+        default: true
+      enable_ryd:
+        description: 'Include Return YouTube Dislikes'
+        required: true
+        type: boolean
+        default: true
+      enable_youspeed:
+        description: 'Include YouSpeed'
+        required: true
+        type: boolean
+        default: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build deb
+    runs-on: macos-15
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Parse control file version
+        id: parse_control
+        run: |
+          version=$(sed -n 's/^Version: //p' control | sed 's/~/-/g')
+          echo "TWEAK_VERSION=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Install dependencies
+        run: brew install ldid dpkg make
+
+      - name: Set PATH environment variable
+        run: echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
+
+      - name: Setup Theos
+        uses: actions/checkout@v4
+        with:
+          repository: theos/theos
+          ref: master
+          path: theos
+          submodules: recursive
+
+      - name: Cache iOS SDK
+        id: sdk-cache
+        uses: actions/cache@v4
+        with:
+          path: theos/sdks/iPhoneOS16.5.sdk
+          key: iPhoneOS16.5.sdk
+
+      - name: Download iOS SDK
+        if: steps.sdk-cache.outputs.cache-hit != 'true'
+        run: |
+          git clone -n --depth=1 --filter=tree:0 https://github.com/theos/sdks.git
+          cd sdks
+          git sparse-checkout set --no-cone iPhoneOS16.5.sdk
+          git checkout
+          mv iPhoneOS16.5.sdk "$GITHUB_WORKSPACE/theos/sdks/"
+
+      - name: Build package
+        run: make package FINALPACKAGE=1 ENABLE_ISPONSORBLOCK=${{ inputs.enable_isponsorblock && '1' || '0' }} ENABLE_RYD=${{ inputs.enable_ryd && '1' || '0' }} ENABLE_YOUSPEED=${{ inputs.enable_youspeed && '1' || '0' }}
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Create release
+        uses: softprops/action-gh-release@v0.1.15
+        env:
+          TWEAK_VERSION: ${{ steps.parse_control.outputs.TWEAK_VERSION }}
+        with:
+          draft: true
+          tag_name: v${{ env.TWEAK_VERSION }}
+          name: v${{ env.TWEAK_VERSION }}
+          files: |
+            packages/*.deb
+          prerelease: ${{ inputs.prerelease }}

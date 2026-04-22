@@ -1,0 +1,27 @@
+[submodule "Headers/YouTubeHeader"]
+	path = Headers/YouTubeHeader
+	url = https://github.com/PoomSmart/YouTubeHeader
+[submodule "Tweaks/Alderis"]
+	path = Tweaks/Alderis
+	url = https://github.com/hbang/Alderis
+[submodule "Tweaks/IAmYouTube"]
+	path = Tweaks/IAmYouTube
+	url = https://github.com/PoomSmart/IAmYouTube.git
+[submodule "Tweaks/Return-YouTube-Dislikes"]
+	path = Tweaks/Return-YouTube-Dislikes
+	url = https://github.com/PoomSmart/Return-YouTube-Dislikes.git
+[submodule "Headers/PSHeader"]
+	path = Headers/PSHeader
+	url = https://github.com/PoomSmart/PSHeader.git
+[submodule "Extensions/OpenYouTubeSafariExtension"]
+	path = Extensions/OpenYouTubeSafariExtension
+	url = https://github.com/BillyCurtis/OpenYouTubeSafariExtension.git
+[submodule "Tweaks/iSponsorBlock"]
+	path = Tweaks/iSponsorBlock
+	url = https://github.com/JeffreyCA/iSponsorBlock.git
+[submodule "Tweaks/YTVideoOverlay"]
+	path = Tweaks/YTVideoOverlay
+	url = https://github.com/PoomSmart/YTVideoOverlay.git
+[submodule "Tweaks/YouSpeed"]
+	path = Tweaks/YouSpeed
+	url = https://github.com/PoomSmart/YouSpeed.git

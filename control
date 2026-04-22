@@ -1,0 +1,9 @@
+Package: ca.jeffrey.ytminimal
+Name: YTMinimal (iSponsorblock + Return YouTube Dislikes)
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: Minimal YouTube tweak with iSponsorBlock and Return YouTube Dislikes
+Maintainer: JeffreyCA
+Author: JeffreyCA
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000), firmware (>= 13.0)
