@@ -9,7 +9,8 @@
 	url = https://github.com/PoomSmart/IAmYouTube.git
 [submodule "Tweaks/Return-YouTube-Dislikes"]
 	path = Tweaks/Return-YouTube-Dislikes
-	url = https://github.com/PoomSmart/Return-YouTube-Dislikes.git
+	url = https://github.com/JeffreyCA/Return-YouTube-Dislikes.git
+	branch = main
 [submodule "Headers/PSHeader"]
 	path = Headers/PSHeader
 	url = https://github.com/PoomSmart/PSHeader.git
