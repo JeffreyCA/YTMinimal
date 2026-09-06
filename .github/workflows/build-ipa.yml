@@ -104,9 +104,26 @@ jobs:
           mv iPhoneOS16.5.sdk "$GITHUB_WORKSPACE/theos/sdks/"
 
       - name: Build deb
-        run: make package FINALPACKAGE=1 ENABLE_ISPONSORBLOCK=${{ inputs.enable_isponsorblock && '1' || '0' }} ENABLE_RYD=${{ inputs.enable_ryd && '1' || '0' }} ENABLE_YOUSPEED=${{ inputs.enable_youspeed && '1' || '0' }}
+        run: make package FINALPACKAGE=1 TARGET_DSYMUTIL=dsymutil ENABLE_ISPONSORBLOCK=${{ inputs.enable_isponsorblock && '1' || '0' }} ENABLE_RYD=${{ inputs.enable_ryd && '1' || '0' }} ENABLE_YOUSPEED=${{ inputs.enable_youspeed && '1' || '0' }}
         env:
           THEOS: ${{ github.workspace }}/theos
+
+      - name: Collect dSYMs
+        env:
+          TWEAK_VERSION: ${{ steps.parse_control.outputs.TWEAK_VERSION }}
+        run: |
+          mkdir -p dsyms
+          find . -path ./theos -prune -o -type d -name '*.dSYM' -print | while read -r d; do
+            cp -R "$d" dsyms/
+          done
+          ls dsyms
+          (cd dsyms && zip -qr "../YTMinimal_${TWEAK_VERSION}_dSYMs.zip" .)
+
+      - name: Upload dSYMs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dSYMs
+          path: YTMinimal_${{ steps.parse_control.outputs.TWEAK_VERSION }}_dSYMs.zip
 
       - name: Download YouTube IPA from URL
         if: inputs.ipa_url != ''
@@ -157,4 +174,5 @@ jobs:
           name: v${{ env.TWEAK_VERSION }} (IPA)
           files: |
             YTMinimal_${{ env.TWEAK_VERSION }}.ipa
+            YTMinimal_${{ env.TWEAK_VERSION }}_dSYMs.zip
           prerelease: ${{ inputs.prerelease }}
