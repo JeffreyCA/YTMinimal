@@ -23,7 +23,8 @@
 [submodule "Tweaks/YTVideoOverlay"]
 	path = Tweaks/YTVideoOverlay
 	url = https://github.com/JeffreyCA/YTVideoOverlay.git
-	branch = main
+	branch = fix/youtube-21.43-player-init
 [submodule "Tweaks/YouSpeed"]
 	path = Tweaks/YouSpeed
-	url = https://github.com/PoomSmart/YouSpeed.git
+	url = https://github.com/JeffreyCA/YouSpeed.git
+	branch = fix/youtube-21.43-player-init
